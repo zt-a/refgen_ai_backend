@@ -1,0 +1,47 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+certs/
+
+# Logs / runtime artifacts
+*.log
+logs/
+celerybeat-schedule
+celerybeat.pid
+
+# Caches and tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+.cache/
+
+# IDE / Editor
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Generated documents
+saved_docs/
