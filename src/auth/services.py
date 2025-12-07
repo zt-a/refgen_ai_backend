@@ -1,6 +1,6 @@
 from sqlalchemy.orm import selectinload
 
-from datetime import datetime
+from datetime import datetime, timezone
 from fastapi import Cookie, Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -104,7 +104,7 @@ async def get_current_user_refresh(
     result = await session.execute(
         select(RefreshToken).where(
             RefreshToken.token == refresh_token,
-            RefreshToken.expires_at > datetime.utcnow()
+            RefreshToken.expires_at > datetime.now(timezone.utc)
         )
     )
     

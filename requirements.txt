@@ -2,6 +2,7 @@ amqp==5.3.1
 annotated-doc==0.0.4
 annotated-types==0.7.0
 anyio==4.12.0
+alembic==1.13.2
 asyncpg==0.31.0
 bcrypt==5.0.0
 beautifulsoup4==4.14.3
@@ -29,6 +30,7 @@ h11==0.16.0
 httpcore==1.0.9
 httpx==0.28.1
 idna==3.11
+iniconfig==2.3.0
 Jinja2==3.1.6
 jiter==0.12.0
 jsonpatch==1.33
@@ -52,14 +54,17 @@ orjson==3.11.4
 ormsgpack==1.12.0
 packaging==25.0
 pillow==12.0.0
+pluggy==1.6.0
 prompt_toolkit==3.0.52
 psycopg2-binary==2.9.11
 pycparser==2.23
 pydantic==2.12.5
 pydantic-settings==2.12.0
 pydantic_core==2.41.5
+Pygments==2.19.2
 PyJWT==2.10.1
 pyparsing==3.2.5
+pytest==9.0.2
 python-dateutil==2.9.0.post0
 python-docx==1.2.0
 python-dotenv==1.2.1

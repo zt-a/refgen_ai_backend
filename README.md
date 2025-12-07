@@ -112,3 +112,11 @@ src/
 - Run `ruff`/`black` (if added later) before committing to keep style consistent.
 - Tests are not included; when adding features, prefer writing pytest suites under `tests/`.
 - Long-running OpenAI calls happen inside Celery; keep API endpoints async and lightweight.
+
+## Database migrations
+- Alembic is configured under `alembic/` with `Base.metadata` as the source of truth.
+- The default DSN in `alembic.ini` targets PostgreSQL (`postgresql+psycopg2`), but when you run `alembic ...` the URL is overridden automatically using values from `.env`. To point to a different database, export `ALEMBIC_DATABASE_URL`.
+- Typical commands:
+  - `alembic revision --autogenerate -m "message"` to create a new migration
+  - `alembic upgrade head` to apply all migrations
+  - `alembic downgrade -1` to revert the last migration

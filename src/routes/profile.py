@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from auth.exceptions import ProfileNotFound
+from src.auth.exceptions import ProfileNotFound
 from src.database import get_async_session
 from src.auth.services import get_current_user
 from src.models.users import User
@@ -41,7 +41,7 @@ async def create_profile(
 
     new_profile = Profile(
         user_id=current_user.id,
-        **profile_data.dict()
+        **profile_data.model_dump()
     )
 
     session.add(new_profile)
@@ -65,7 +65,7 @@ async def update_profile(
     if not profile:
         raise ProfileNotFound()
 
-    update_fields = profile_data.dict(exclude_unset=True)
+    update_fields = profile_data.model_dump(exclude_unset=True)
     for key, value in update_fields.items():
         setattr(profile, key, value)
 

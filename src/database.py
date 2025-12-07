@@ -33,7 +33,7 @@ SyncSessionLocal = sessionmaker(
 )
 
 
-from models import *
+from src.models import *
 
 async def init_db():
     async with engine.begin() as conn:

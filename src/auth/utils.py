@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import jwt
 import logging
 from src.config import settings
@@ -61,7 +61,7 @@ def create_access_token(
     expires_delta: int = settings.auth_jwt.access_token_expires_minutes
 ) -> str:
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=expires_delta)
+    expire = datetime.now(timezone.utc) + timedelta(minutes=expires_delta)
     to_encode.update({"exp": expire})
     return encode_jwt(to_encode)
 
@@ -71,8 +71,8 @@ def create_refresh_token(
     expires_delta: int = settings.auth_jwt.refresh_token_expires_days
 ) -> str:
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(days=expires_delta)
-    to_encode.update({"exp": expire, "iat": datetime.utcnow()})
+    expire = datetime.now(timezone.utc) + timedelta(days=expires_delta)
+    to_encode.update({"exp": expire, "iat": datetime.now(timezone.utc)})
     return encode_jwt(to_encode)
 
 
@@ -81,9 +81,8 @@ def get_token_expiration(token: str) -> datetime:
     exp_timestamp = decoded.get("exp")
     if exp_timestamp is None:
         raise ValueError("Token does not contain 'exp' claim")
-    return datetime.fromtimestamp(exp_timestamp)
+    return datetime.fromtimestamp(exp_timestamp, tz=timezone.utc)
 
 
 def is_token_expired(token: str) -> bool:
-    return datetime.utcnow() > get_token_expiration(token)
-
+    return datetime.now(timezone.utc) > get_token_expiration(token)
