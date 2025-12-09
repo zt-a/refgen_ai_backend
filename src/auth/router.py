@@ -83,7 +83,7 @@ async def login(
 
 
 
-@router.post("/logout")
+@router.get("/logout")
 async def logout(
     response: Response,
     current_user: User = Depends(get_current_user_refresh),
