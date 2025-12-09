@@ -18,10 +18,10 @@ async def lifespan(app: FastAPI):
     
 app = FastAPI(lifespan=lifespan)
 
-app.include_router(auth_router)
+app.include_router(prefix=settings.api_v1_prefix, router=auth_router)
 app.include_router(prefix=settings.api_v1_prefix, router=essay_router)
 app.include_router(prefix=settings.api_v1_prefix, router=refprint_router)
-app.include_router(profile_router)
+app.include_router(prefix=settings.api_v1_prefix, router=profile_router)
 
 
 @app.get("/")
