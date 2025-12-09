@@ -101,7 +101,7 @@ async def logout(
     return {"detail": "Successfully logged out"}
 
 
-@router.post("/refresh", response_model=TokenResponseWithUser)
+@router.get("/refresh", response_model=TokenResponseWithUser)
 async def refresh_token(
     response: Response,
     current_user: User = Depends(get_current_user_refresh),
