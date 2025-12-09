@@ -85,7 +85,7 @@ async def db_session():
 
 
 @pytest.fixture
-async def client(db_session) -> AsyncClient:
+async def client(db_session) -> AsyncClient: # type: ignore
     async def _get_session():
         yield db_session
 

@@ -83,7 +83,7 @@ class RefPrint:
         return runs
 
     def ref_print(self) -> Document:
-        # Задаём стиль документа
+        # Стиль документа
         style = self.doc.styles['Normal']
         style.font.name = 'Times New Roman'
         style.font.size = Pt(14)
@@ -91,7 +91,7 @@ class RefPrint:
         style.paragraph_format.space_after = Pt(0)
         style.paragraph_format.line_spacing = 1
 
-        for html_index, html_data in enumerate(self.contents):
+        for html_data in self.contents:
             soup = BeautifulSoup(html_data, 'html.parser')
             content_tag = soup.find('content')
             formulas_tag = soup.find('formulas')
@@ -99,25 +99,25 @@ class RefPrint:
             if not content_tag:
                 continue
 
-            # Собираем формулы в словарь
+            # Формулы
             formulas_dict = {}
             if formulas_tag:
                 for latex_tag in formulas_tag.find_all('latex'):
                     formulas_dict[latex_tag['id']] = latex_tag.get_text(strip=True)
 
             for element in content_tag.children:
-                if element.name is None:  # текст без тега
-                    para = self.doc.add_paragraph()
-                    para.paragraph_format.space_before = Pt(0)
-                    para.paragraph_format.space_after = Pt(0)
-                    para.paragraph_format.line_spacing = 1
-                    for run_text, bold, italic in self._process_inline_tags(element):
-                        run = para.add_run(run_text)
-                        self.set_run_font(run, size=14, bold=bold, italic=italic)
+                # Игнорируем пустые текстовые узлы
+                if element.name is None:
+                    text = (element.string or '').strip()
+                    if not text:
+                        continue
+                    para = self.doc.add_paragraph(text)
                     self.set_paragraph_alignment(para)
                     continue
 
                 text = element.get_text(strip=True)
+                if not text and element.name not in ('br', 'table', 'ul', 'ol', 'formula'):
+                    continue
 
                 # Заголовки
                 if element.name in ('h1','h2','h3'):
@@ -130,26 +130,28 @@ class RefPrint:
 
                 # Параграфы
                 elif element.name == 'p':
+                    para_text = ''.join([t for t, _, _ in self._process_inline_tags(element)]).strip()
+                    if not para_text:
+                        continue
                     para = self.doc.add_paragraph()
-                    para.paragraph_format.space_before = Pt(0)
-                    para.paragraph_format.space_after = Pt(0)
-                    para.paragraph_format.line_spacing = 1
                     for run_text, bold, italic in self._process_inline_tags(element):
-                        run = para.add_run(run_text)
-                        self.set_run_font(run, size=14, bold=bold, italic=italic)
+                        if run_text.strip():
+                            run = para.add_run(run_text)
+                            self.set_run_font(run, size=14, bold=bold, italic=italic)
                     self.set_paragraph_alignment(para)
 
                 # Списки
                 elif element.name in ('ul','ol'):
                     style_name = 'List Bullet' if element.name == 'ul' else 'List Number'
                     for li in element.find_all('li', recursive=False):
+                        li_text = ''.join([t for t, _, _ in self._process_inline_tags(li)]).strip()
+                        if not li_text:
+                            continue
                         para = self.doc.add_paragraph(style=style_name)
-                        para.paragraph_format.space_before = Pt(0)
-                        para.paragraph_format.space_after = Pt(0)
-                        para.paragraph_format.line_spacing = 1
                         for run_text, bold, italic in self._process_inline_tags(li):
-                            run = para.add_run(run_text)
-                            self.set_run_font(run, size=14, bold=bold, italic=italic)
+                            if run_text.strip():
+                                run = para.add_run(run_text)
+                                self.set_run_font(run, size=14, bold=bold, italic=italic)
 
                 # Формулы
                 elif element.name == 'formula' and formulas_dict:
@@ -157,9 +159,6 @@ class RefPrint:
                     latex = formulas_dict.get(formula_id)
                     if latex:
                         para = self.doc.add_paragraph()
-                        para.paragraph_format.space_before = Pt(0)
-                        para.paragraph_format.space_after = Pt(0)
-                        para.paragraph_format.line_spacing = 1
                         omml_xml = self.latex_converter.convert(latex)
                         para._p.append(omml_xml)
 
@@ -174,12 +173,10 @@ class RefPrint:
                         table_row = table.add_row().cells
                         for i, cell in enumerate(cells):
                             para = table_row[i].paragraphs[0]
-                            para.paragraph_format.space_before = Pt(0)
-                            para.paragraph_format.space_after = Pt(0)
-                            para.paragraph_format.line_spacing = 1
                             for run_text, bold, italic in self._process_inline_tags(cell):
-                                run = para.add_run(run_text)
-                                self.set_run_font(run, size=14, bold=bold, italic=italic)
+                                if run_text.strip():
+                                    run = para.add_run(run_text)
+                                    self.set_run_font(run, size=14, bold=bold, italic=italic)
 
                 # Разрыв страницы
                 elif element.name == 'br':
@@ -187,3 +184,4 @@ class RefPrint:
                     para.add_run().add_break(WD_BREAK.PAGE)
 
         return self.doc
+

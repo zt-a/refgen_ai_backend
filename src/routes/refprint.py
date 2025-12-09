@@ -111,17 +111,16 @@ async def refprint(
     # Добавляем introduction если есть
     if essay.introduction:
         ref.ref_add(essay.introduction)
+        ref.ref_add(br)
         
-    ref.ref_add(br)
         
         
     # Добавляем главы
     for chapter in essay.chapters:
         if chapter.content:
             ref.ref_add(chapter.content)
-            
-    ref.ref_add(br)
-    # Добавляем br
+            ref.ref_add(br)
+
     ref.ref_add(
         f"""
 <document>
