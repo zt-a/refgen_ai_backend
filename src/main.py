@@ -2,6 +2,7 @@ import asyncio
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
+from fastapi.middleware.cors import CORSMiddleware
 from src.database import init_db
 from src.auth.router import router as auth_router
 from src.routes.profile import router as profile_router
@@ -17,6 +18,19 @@ async def lifespan(app: FastAPI):
     yield
     
 app = FastAPI(lifespan=lifespan)
+
+
+origins = [
+    "http://localhost:5173",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,      
+    allow_credentials=True,     
+    allow_methods=["*"],       
+    allow_headers=["*"],       
+)
 
 app.include_router(prefix=settings.api_v1_prefix, router=auth_router)
 app.include_router(prefix=settings.api_v1_prefix, router=profile_router)
