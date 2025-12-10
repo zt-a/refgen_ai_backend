@@ -22,7 +22,7 @@ def _set_refresh_cookie(response: Response, token: str):
         value=token,
         httponly=True,
         max_age=settings.auth_jwt.refresh_token_expires_days * 24 * 60 * 60,
-        samesite="lax",
+        samesite="none", # lax 
         secure=False
     )
 
