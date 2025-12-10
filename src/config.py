@@ -62,6 +62,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=BASE_DIR / '.env', env_file_encoding='utf-8', extra='ignore')
 
     api_v1_prefix: str = "/api/v1"
+    is_prod: str = Field(False, alias="IS_PROD")
     db: DbSettings = DbSettings()
     auth_jwt: AuthJWT = AuthJWT()
     refagent: RefAgentSettings = RefAgentSettings()
