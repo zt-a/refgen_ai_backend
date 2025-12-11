@@ -26,7 +26,7 @@ class Profile(Base):
     
     course: Mapped[int] = mapped_column(Integer, nullable=True)
     
-    group: Mapped[str] = mapped_column(String(10), nullable=True)
+    group: Mapped[str] = mapped_column(String(100), nullable=True)
     
     city: Mapped[str] = mapped_column(String(100), nullable=True)
     
