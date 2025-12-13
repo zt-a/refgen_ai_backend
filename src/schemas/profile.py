@@ -19,7 +19,7 @@ class ProfileBase(BaseModel):
     city: Optional[str] = None
     phone_number: Optional[str] = None
     # phone_number_verified: Optional[bool] = False
-    avatar_url: Optional[str] = None
+    # avatar_url: Optional[str] = None
 
 class ProfileCreateRequest(ProfileBase):
     pass  # для создания/обновления профиля

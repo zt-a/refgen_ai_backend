@@ -30,7 +30,7 @@ class Profile(Base):
     
     city: Mapped[str] = mapped_column(String(100), nullable=True)
     
-    avatar_url: Mapped[str] = mapped_column(String(200), nullable=True)
+    # avatar_url: Mapped[str] = mapped_column(String(200), nullable=True)
     
     user: Mapped["User"] = relationship("User", back_populates="profile") # type: ignore
     
